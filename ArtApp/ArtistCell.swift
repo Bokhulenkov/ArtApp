@@ -15,7 +15,7 @@ class ArtistCell: UICollectionViewCell {
     
     private let nameArtist: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 24, weight: .bold)
+        label.font = .systemFont(ofSize: 22, weight: .bold)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -25,6 +25,7 @@ class ArtistCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .label
         label.textAlignment = .left
+        label.font = .systemFont(ofSize: 14)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -32,11 +33,10 @@ class ArtistCell: UICollectionViewCell {
     
     private let imageArtist: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    
     
     //    MARK: - Init
     
@@ -45,6 +45,7 @@ class ArtistCell: UICollectionViewCell {
         
         setUI()
         setConstraints()
+        
     }
     
     required init?(coder: NSCoder) {
@@ -57,27 +58,25 @@ class ArtistCell: UICollectionViewCell {
         
         contentView.addSubview(nameArtist)
         contentView.addSubview(imageArtist)
-        contentView.addSubview(bioArtist)
+         contentView.addSubview(bioArtist)
         
         contentView.backgroundColor = .blue
         contentView.clipsToBounds = false
+        
+        
     }
-    
-//    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
-//           return contentView.systemLayoutSizeFitting(CGSize(width: self.bounds.size.width, height: self.bounds.size.height))
-//       }
-    
     
     private func setConstraints() {
         
         NSLayoutConstraint.activate([
-            
+
             nameArtist.topAnchor.constraint(equalTo: contentView.topAnchor),
             nameArtist.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             nameArtist.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             
-            imageArtist.topAnchor.constraint(equalTo: nameArtist.bottomAnchor, constant: 5),
-            imageArtist.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            imageArtist.topAnchor.constraint(equalTo: nameArtist.bottomAnchor),
+            imageArtist.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            imageArtist.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             
             bioArtist.topAnchor.constraint(equalTo: imageArtist.bottomAnchor, constant: 5),
             bioArtist.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
@@ -86,13 +85,10 @@ class ArtistCell: UICollectionViewCell {
         ])
     }
     
-    
-    
-    
     public func configureCell(artist: Artist) {
-        nameArtist.text = artist.name
-        imageArtist.image = UIImage(named: artist.image)
-        bioArtist.text = artist.bio
+            self.nameArtist.text = artist.name
+            self.imageArtist.image = UIImage(named: artist.image)
+            self.bioArtist.text = artist.bio
     }
     
     
@@ -103,4 +99,50 @@ class ArtistCell: UICollectionViewCell {
         bioArtist.text = nil
     }
     
+}
+
+// MARK: - Extensions
+
+extension ArtistCell {
+    class func getProguctHieghtForWidth(artist: Artist, width: CGFloat) -> CGFloat {
+        
+        // magic numbers explanation:
+          // 16 - offset between bio and image
+          // 22 - height of title
+          // 8 - offset between image and title
+          var resultingHeight: CGFloat = 16 + 22 + 8
+        
+//        get image height based on width and aspect ratio
+        let imageHeight = width * 2/3
+        resultingHeight += imageHeight
+        
+        let nameHeight = artist.name.getHeight(
+            font: .systemFont(ofSize: 22), width: width
+        )
+        
+        let bioHeight = artist.bio.getHeight(
+            font: .systemFont(ofSize: 14), width: width
+        )
+        
+        resultingHeight += nameHeight
+        resultingHeight += bioHeight
+        return resultingHeight
+    }
+}
+
+extension String {
+  func getHeight(font: UIFont, width: CGFloat) -> CGFloat {
+  let attributes: [NSAttributedString.Key: Any] = [
+    .font: font
+  ]
+  let attributedText = NSAttributedString(string: self, attributes:
+    attributes)
+  let constraintBox = CGSize(width: width, height:
+    .greatestFiniteMagnitude)
+  let textHeight = attributedText.boundingRect(
+    with: constraintBox, options: [.usesLineFragmentOrigin,
+    .usesFontLeading], context: nil)
+    .height.rounded(.up)
+  return textHeight
+  }
 }

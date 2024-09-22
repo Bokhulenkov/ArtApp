@@ -17,8 +17,7 @@ import UIKit
 // MARK: - Variables
 
 private let artists: [Artist] = ArtistData.getMockArray()
-
-private var artistData: ArtistData!
+//private var artistData: ArtistData!
 
 class ViewController: UIViewController {
     
@@ -30,9 +29,25 @@ class ViewController: UIViewController {
         return search
     }()
     
-    private lazy var collectionArtists: UICollectionView = {
+    private let layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
+        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        layout.minimumLineSpacing = 32
+        layout.minimumInteritemSpacing = 32
+        layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
+        return layout
+    }()
+    
+    private lazy var collectionArtists: UICollectionView = {
+        
+//        let layout = UICollectionViewFlowLayout()
+//        layout.scrollDirection = .vertical
+//        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+//        layout.minimumLineSpacing = 32
+//        layout.minimumInteritemSpacing = 32
+//        layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
+        
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.alwaysBounceVertical = true
         collection.showsVerticalScrollIndicator = false
@@ -76,8 +91,8 @@ extension ViewController {
         NSLayoutConstraint.activate([
             collectionArtists.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionArtists.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            collectionArtists.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
-            collectionArtists.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10)
+            collectionArtists.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionArtists.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
 }
@@ -94,9 +109,10 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         
         let artist = artists[indexPath.row]
         cell.configureCell(artist: artist)
-            
+
         return cell
     }
+    
     
 }
 
@@ -104,19 +120,32 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
 //    размер контента
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = (view.frame.width)
-        return CGSize(width: size, height: size)
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        let size = (view.frame.width)
+//        return CGSize(width: size, height: size)
+//    }
+    
     
 //    вертикальный межстрочный интервал
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 40
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//        return 5
+//    }
     
 //    горизонтальный интервал
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+//        return 0
+//    }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let contentHorizontalSpaces = layout.minimumInteritemSpacing + layout.sectionInset.left + layout.sectionInset.right
+        
+        let newCellWidth = (collectionView.bounds.width - contentHorizontalSpaces) / 2
+        
+        let newHeight = ArtistCell.getProguctHieghtForWidth(artist: artists[indexPath.row], width: newCellWidth)
+        
+        return CGSize(width: newCellWidth, height: newHeight)
+    }
 }
+
+
