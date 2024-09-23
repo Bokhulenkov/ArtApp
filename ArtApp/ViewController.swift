@@ -33,33 +33,25 @@ class ViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        layout.minimumLineSpacing = 32
-        layout.minimumInteritemSpacing = 32
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
+        //        layout.minimumLineSpacing = 32
+        //        layout.minimumInteritemSpacing = 32
+        //        layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
         return layout
     }()
     
     private lazy var collectionArtists: UICollectionView = {
-        
-//        let layout = UICollectionViewFlowLayout()
-//        layout.scrollDirection = .vertical
-//        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-//        layout.minimumLineSpacing = 32
-//        layout.minimumInteritemSpacing = 32
-//        layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
-        
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.alwaysBounceVertical = true
         collection.showsVerticalScrollIndicator = false
         collection.translatesAutoresizingMaskIntoConstraints = false
         return collection
     }()
-
+    
     //    MARK: LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
         setView()
         setDelegate()
         setConstraints()
@@ -109,43 +101,37 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         
         let artist = artists[indexPath.row]
         cell.configureCell(artist: artist)
-
+        
         return cell
     }
-    
-    
 }
 
 // MARK: - Extensions UICollectionViewDelegateFlowLayout
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
-//    размер контента
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        let size = (view.frame.width)
-//        return CGSize(width: size, height: size)
-//    }
+    //    размер контента
+    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    //
+    //        let contentHorizontalSpaces = layout.minimumInteritemSpacing + layout.sectionInset.left + layout.sectionInset.right
+    //
+    //        let newCellWidth = (collectionView.bounds.width - contentHorizontalSpaces) / 2
+    //
+    //        let newHeight = ArtistCell.getProguctHieghtForWidth(artist: artists[indexPath.row], width: newCellWidth)
+    //
+    //        return CGSize(width: newCellWidth, height: newHeight)
+    //    }
     
     
-//    вертикальный межстрочный интервал
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        return 5
-//    }
-    
-//    горизонтальный интервал
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-//        return 0
-//    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let contentHorizontalSpaces = layout.minimumInteritemSpacing + layout.sectionInset.left + layout.sectionInset.right
-        
-        let newCellWidth = (collectionView.bounds.width - contentHorizontalSpaces) / 2
-        
-        let newHeight = ArtistCell.getProguctHieghtForWidth(artist: artists[indexPath.row], width: newCellWidth)
-        
-        return CGSize(width: newCellWidth, height: newHeight)
+    //    вертикальный межстрочный интервал
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 2
     }
+    
+    //    горизонтальный интервал
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 2
+    }
+    
 }
 
 
