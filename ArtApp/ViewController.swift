@@ -17,7 +17,6 @@ import UIKit
 // MARK: - Variables
 
 private let artists: [Artist] = ArtistData.getMockArray()
-//private var artistData: ArtistData!
 
 class ViewController: UIViewController {
     

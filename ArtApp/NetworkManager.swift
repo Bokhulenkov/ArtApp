@@ -5,47 +5,58 @@
 //  Created by Alexander Bokhulenkov on 17.09.2024.
 //
 
-import Foundation
+import UIKit
 
 struct NetworkManager {
+    // MARK: - Variables
     
     private let url = ArtistData.baseURL
+    private let sessionConfiguration = URLSessionConfiguration.default
+    private let decoded = JSONDecoder()
     
+    // MARK: - <#Section Heading#>
     
-    
-    
-     func performRequest() async {
+    func fetchData() {
         
-        guard let url = URL(string: url) else { fatalError("Failed get url") }
+        let session = URLSession(configuration: sessionConfiguration)
+        
+        guard let url = URL(string: url) else { return }
+        //        UIApplication.shared.canOpenURL(url) можно проверить url на вилидность так
         
         let urlRequest = URLRequest(url: url)
         
-        let task = URLSession.shared.dataTask(with: urlRequest) {data, response, error in
-            guard let safeData = data else { return }
-            guard let artistData = parseJSON(safeData) else { return }
-        }
-        task.resume()
+        session.dataTask(with: urlRequest) { data, response, error in
+            
+            if error == nil, let parsData = data {
+                
+                
+            } else {
+                print("Error: \(String(describing: error?.localizedDescription))")
+            }
+            
+        }.resume()
     }
-    
-    
-
+        
     
     func parseJSON(_ data: Data) -> Artist? {
-        let decoder = JSONDecoder()
-        
-        do {
-            let decoderData = try decoder.decode(Artist.self, from: data)
+            
+        do { let decoderData = try decoded.decode(Artist.self, from: data)
+            
             let nameArtist = decoderData.name
             let bioArtist = decoderData.bio
             let imageArtist = decoderData.image
             let works = decoderData.works
             
             let artistData = Artist(name: nameArtist, bio: bioArtist, image: imageArtist, works: works)
+            
             return artistData
         } catch {
-            print(fatalError("json error"))
-            return nil
+            print("Error")
         }
-    }
- 
+        return nil
+                
+                
+                
+        }
+        
 }
